@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\User;
 
 class UserSeeder extends Seeder
 {
@@ -25,12 +26,12 @@ class UserSeeder extends Seeder
                 'name' => 'Regular User',
                 'email' => 'user@gmail.com',
                 'password' => bcrypt('password'),
-                'no_hp' => '081234567890',
+                'no_telp' => '081234567890',
                 'role' => 'user'
             ]
         ];
         foreach ($users as $user) {
-            Users::create($user);
+            User::updateOrCreate(['email' => $user['email']], $user);
         }   
     }
 }
