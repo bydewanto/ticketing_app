@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\tickets;
 
 class TicketSeeder extends Seeder
 {
@@ -54,7 +55,13 @@ class TicketSeeder extends Seeder
         ];
 
         foreach ($tickets as $ticket) {
-            Ticket::create($ticket);
+            Tickets::updateOrCreate(
+                [
+                    'event_id' => $ticket['event_id'],
+                    'tipe' => $ticket['tipe']
+                ],
+                $ticket
+            );
         }        
     }
 }

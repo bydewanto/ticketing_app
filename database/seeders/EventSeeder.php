@@ -4,6 +4,9 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\events;
+use App\Models\User;
+use App\Models\Category;
 
 class EventSeeder extends Seeder
 {
@@ -16,8 +19,8 @@ class EventSeeder extends Seeder
     {
         $events = [
             [
-                'user_id' => 2,
-                'category_id' => 1,
+                'user_email' => 'user@gmail.com',
+                'category' => 'Konser',
                 'judul' => 'Konser Musik Rock',
                 'deskripsi' => 'Nikmati malam penuh energi dengan band rock terkenal.',
                 'lokasi' => 'Stadion Utama',
@@ -25,8 +28,8 @@ class EventSeeder extends Seeder
                 'gambar' => 'konser_rock.jpg'
             ],
             [
-                'user_id' => 2,
-                'category_id' => 4,
+                'user_email' => 'user@gmail.com',
+                'category' => 'Workshop',
                 'judul' => 'Workshop Fotografi',
                 'deskripsi' => 'Pelajari teknik fotografi dari fotografer profesional.',
                 'lokasi' => 'Studio Kreatif',
@@ -34,8 +37,8 @@ class EventSeeder extends Seeder
                 'gambar' => 'workshop_fotografi.jpg'
             ],
             [
-                'user_id' => 2,
-                'category_id' => 2,
+                'user_email' => 'user@gmail.com',
+                'category' => 'Pameran Seni',
                 'judul' => 'Pameran Seni Kontemporer',
                 'deskripsi' => 'Jelajahi karya seni kontemporer dari seniman lokal dan internasional.',
                 'lokasi' => 'Galeri Seni Modern',
@@ -44,8 +47,31 @@ class EventSeeder extends Seeder
             ]
         ];
 
-        foreach ($events as $event) {
-            Event::create($event);
+        foreach ($events as $eventData) {
+            // resolve user (by email) and fallback to first user
+            $user = User::where('email', $eventData['user_email'] ?? null)->first() ?? User::first();
+            if (! $user) {
+                // nothing to associate with; skip this event
+                continue;
+            }
+
+            // resolve category (by nama) and fallback to first category
+            $category = Category::where('nama', $eventData['category'] ?? null)->first() ?? Category::first();
+            if (! $category) {
+                continue;
+            }
+
+            $payload = [
+                'user_id' => $user->id,
+                'category_id' => $category->id,
+                'judul' => $eventData['judul'],
+                'deskripsi' => $eventData['deskripsi'],
+                'lokasi' => $eventData['lokasi'],
+                'tanggal_waktu' => $eventData['tanggal_waktu'],
+                'gambar' => $eventData['gambar'],
+            ];
+
+            events::updateOrCreate(['judul' => $payload['judul']], $payload);
         }        
     }
 }
