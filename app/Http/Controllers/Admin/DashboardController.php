@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Models\ticket;
 use App\Models\events;
 use App\Models\Order;
-use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
@@ -17,6 +16,6 @@ class DashboardController extends Controller
         $totalCategories = \App\Models\Category::count();
         $totalOrders = Order::count();
 
-        return view('admin.dashboard', compact('totalTickets', 'totalEvents', 'totalOrders'));
+        return view('admin.dashboard', compact('totalCategories', 'totalEvents', 'totalOrders'));
     }
 }
