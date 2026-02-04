@@ -52,4 +52,11 @@ $app->singleton(
 |
 */
 
+->withmiddeware(function (Middleware $middleware) {
+    $middleware->alias([
+        'admin' => \App\Http\Middleware\AdminMiddleware::class,
+    ])
+});
+
+
 return $app;
